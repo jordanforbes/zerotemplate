@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://gy12efjh72oe"]
+
+[ext_resource type="Texture2D" uid="uid://dqw28ig0foflk" path="res://assets/zero/zerox4idle.png" id="1_jnj6u"]
+[ext_resource type="Script" path="res://Player/player.gd" id="1_mfh14"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_xrelh"]
+radius = 15.0
+height = 36.2069
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_mfh14")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(2, 0)
+scale = Vector2(1, 1.16)
+shape = SubResource("CapsuleShape2D_xrelh")
+
+[node name="ZeroSprite" type="Sprite2D" parent="."]
+position = Vector2(-8, 0)
+texture = ExtResource("1_jnj6u")
+hframes = 6
