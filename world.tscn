@@ -7555,3 +7555,10 @@ layer_0/tile_data = PackedInt32Array(65533, 1835008, 10, 131069, 1835008, 11, 19
 
 [node name="Player" parent="." instance=ExtResource("2_ckrc8")]
 position = Vector2(48, 75)
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Player"]
+remote_path = NodePath("../../Camera2D")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(48, 75)
+drag_vertical_enabled = true
