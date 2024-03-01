@@ -12,20 +12,26 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var double_jump_usable : bool = true
 var animation_locked : bool = false
 var direction : Vector2 = Vector2.ZERO
+var was_in_air : bool = false
 
 func _physics_process(delta):
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y += gravity * delta
+		was_in_air = true
 	else:
 		#double jump resets when on ground
 		double_jump_usable = true
+		
+		if was_in_air == true:
+			land()
+		
+		was_in_air = false
 
 	# Handle jump.
 	if Input.is_action_just_pressed("jump"):
 		if is_on_floor():
-			#normal jump from floor
-			velocity.y = jump_velocity
+			jump()
 		
 		elif double_jump_usable:
 			#double jump in air
@@ -42,11 +48,51 @@ func _physics_process(delta):
 
 	move_and_slide()
 	update_animation()
+	update_facing_direction()
 	
-func update_animation() -> void: 
+func update_animation(): 
 	if not animation_locked: 
-		if direction.x != 0:
-			animated_sprite.play("Run")
+		if not is_on_floor:
+			animated_sprite.play("Air")
+			#animation_locked = true
 		else:
-			animated_sprite.play("Idle")
-		
+			if direction.x != 0:
+				animated_sprite.play("Run")
+			else:
+				animated_sprite.play("Idle")
+			
+func update_facing_direction():
+	if direction.x > 0:
+		animated_sprite.flip_h = true 
+	elif direction.x < 0:
+		animated_sprite.flip_h = false
+
+func jump():
+	#normal jump from floor
+	velocity.y = jump_velocity
+	animated_sprite.play("Jump")
+	animation_locked = true
+	
+func land():
+	animated_sprite.play("Land")
+	animation_locked = true
+	print(animated_sprite.animation )
+
+
+func _on_animated_sprite_2d_animation_finished():
+	print("animation finished")
+	if(animated_sprite.animation == "Land"):
+		print("yes")
+		animation_locked = false
+	#elif(animated_sprite.animation == "Jump"):
+		#animation_locked = false
+	elif(animated_sprite.animation == "Jump"):
+		animated_sprite.play("Air")
+		animation_locked = true
+
+
+#func _on_animated_sprite_2d_animation_looped():
+	#print("animation finished")
+	#if(animated_sprite.animation == "Land"):
+		#print("yes")
+		#animation_locked = false
